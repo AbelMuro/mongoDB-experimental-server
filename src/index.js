@@ -6,14 +6,17 @@ const app = express();                                        //creating an obje
 const port = 4000;
 const ObjectId = mongoose.Types.ObjectId;
 
+connectDB();
 
 app.get('/', async (req, res) => {
-    const id = new ObjectId('67269b183f1c7d0987ddcdf9');
+    const id = new ObjectId('6726bcc8f4345efef987f2b0');
 
     try{
-        await connectDB();
-        const user = await User.findOne({_id: id});
-        console.log(user);
+        const updateResult = await User.updateOne(
+                { _id: id },                                    // Filter criteria
+                { $set: {status: 'active' } }        // Update operation
+            );
+        console.log(updateResult);
         res.status(200).send('Hello World');    
     }
     catch(error){
