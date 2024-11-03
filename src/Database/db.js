@@ -1,26 +1,19 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://abelmuro93:Pz1l94Z5DTsnQLYv@cluster0.5k5vu.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const mongoose = require('mongoose');
+const { config } = require('dotenv');
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
+config();
 
-async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
+
+async function connectDB() {
+  const url = `mongodb+srv://${process.env.accountname}:${process.env.password}@cluster0.5k5vu.mongodb.net/${process.env.database}?retryWrites=true&w=majority&appName=${process.env.appName}`
+
+    try{
+      await mongoose.connect(url);
+      console.log('You have connected to the database')
+    }
+    catch(error){
+      console.log('error', error.message);
+    }
 }
 
-module.exports = {run};
+module.exports = connectDB;

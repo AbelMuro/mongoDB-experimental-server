@@ -1,14 +1,24 @@
 const express = require('express');
-const {run} = require('./Database/db.js');
+const connectDB = require('./Database/db.js');
+const mongoose = require('mongoose');
+const {User} = require('./Model/Model.js');
 const app = express();                                        //creating an object that represents the main app
 const port = 4000;
-
-// the issue is that i can't connect to the database in mongoDB
-run().catch(console.dir);
+const ObjectId = mongoose.Types.ObjectId;
 
 
-app.get('/', (req, res) => {
-    res.send('Hello World')
+app.get('/', async (req, res) => {
+    const id = new ObjectId('67269b183f1c7d0987ddcdf9');
+
+    try{
+        await connectDB();
+        const user = await User.findOne({_id: id});
+        console.log(user);
+        res.status(200).send('Hello World');    
+    }
+    catch(error){
+        res.status(500).send(error.message);    
+    }     
 })
 
 app.listen(port, (error) => {
